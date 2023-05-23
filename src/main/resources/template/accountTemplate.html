@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bank Transaction Table</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .status-pending {
+      background-color: orange;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <table class="table table-bordered table-striped">
+    <thead class="thead-light">
+    <tr>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Withdrawal</th>
+      <th>Deposit</th>
+      <th>Balance</th>
+      <th>Interest</th>
+      <th>Record Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>2023-05-20</td>
+      <td>Completed</td>
+      <td>$100.00</td>
+      <td>-</td>
+      <td>$2,500.00</td>
+      <td>$10.00</td>
+      <td>Approved</td>
+    </tr>
+    <tr class="status-pending">
+      <td>2023-05-18</td>
+      <td>Completed</td>
+      <td>-</td>
+      <td>$500.00</td>
+      <td>$2,600.00</td>
+      <td>$5.00</td>
+      <td>Pending</td>
+    </tr>
+    <!-- Add more transaction rows here -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
