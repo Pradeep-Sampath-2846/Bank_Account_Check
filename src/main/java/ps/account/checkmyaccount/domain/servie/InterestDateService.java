@@ -1,13 +1,26 @@
 package ps.account.checkmyaccount.domain.servie;
 
 import org.springframework.stereotype.Service;
+import ps.account.checkmyaccount.application.dto.request.InterestDetail;
+import ps.account.checkmyaccount.application.dto.request.RequestDto;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
 @Service
 public class InterestDateService {
-    public LocalDate getMonthEndInterest(LocalDate date){
+
+    public LocalDate getInterestDate(InterestDetail interestDetail,LocalDate date){
+        if (interestDetail.isMidDate() && interestDetail.isRemoveSunday()){
+            return getMonthMidDateWithoutSunday(date);
+        } else if (interestDetail.isMidDate() && interestDetail.isRemoveSaturday()) {
+            return getMonthMidDateWithoutWeekEnd(date);
+        } else if (!interestDetail.isMidDate() && interestDetail.isRemoveSunday()) {
+            return getMonthEndWithoutSunday(date);
+        }
+        return null;
+    }
+    private LocalDate getMonthEndInterest(LocalDate date){
         Month month = date.getMonth();
         try {
             return LocalDate.of(date.getYear(),date.getMonth().getValue(),month.maxLength());
@@ -16,7 +29,7 @@ public class InterestDateService {
         }
     }
 
-    public LocalDate getMonthEndWithoutSunday(LocalDate date){
+    private LocalDate getMonthEndWithoutSunday(LocalDate date){
         LocalDate monthEndDate = getMonthEndInterest(date);
         if (monthEndDate.getDayOfWeek().name().equalsIgnoreCase("SUNDAY")){
             return monthEndDate.minusDays(1);
@@ -24,7 +37,7 @@ public class InterestDateService {
         return monthEndDate;
     }
 
-    public LocalDate getMonthEndWithoutWeekEnd(LocalDate date){
+    private LocalDate getMonthEndWithoutWeekEnd(LocalDate date){
         LocalDate monthEndDate = getMonthEndInterest(date);
         if (monthEndDate.getDayOfWeek().name().equalsIgnoreCase("SUNDAY")){
             return monthEndDate.minusDays(2);
@@ -34,13 +47,13 @@ public class InterestDateService {
         return monthEndDate;
     }
 
-    public LocalDate getMonthMidDateWithoutSunday(LocalDate date){
+    private LocalDate getMonthMidDateWithoutSunday(LocalDate date){
         if (date.getDayOfWeek().name().equalsIgnoreCase("SUNDAY")){
             return date.plusDays(1);
         }
         return date;
     }
-    public LocalDate getMonthMidDateWithoutWeekEnd(LocalDate date){
+    private LocalDate getMonthMidDateWithoutWeekEnd(LocalDate date){
         if (date.getDayOfWeek().name().equalsIgnoreCase("SUNDAY")){
             return date.plusDays(1);
         } else if (date.getDayOfWeek().name().equalsIgnoreCase("SATURDAY")) {

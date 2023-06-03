@@ -4,9 +4,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ps.account.checkmyaccount.application.dto.request.RequestDto;
 import ps.account.checkmyaccount.domain.servie.FileProcessorService;
 
 import java.io.FileInputStream;
@@ -17,16 +16,15 @@ import java.io.IOException;
 public class AccountValidationController {
     @Autowired
     private FileProcessorService fileProcessorService;
-    @GetMapping("/xsxl")
-    public void checkAccount() throws IOException, InvalidFormatException {
-        System.out.println();
+    @PostMapping("/xsxl")
+    public void checkAccount(@RequestBody RequestDto requestDto) throws IOException, InvalidFormatException {
         String path = "/home/pradeep/Documents/Personal Projects/checkmyaccount/src/main/resources/input/testFile.xlsx";
         FileInputStream is = new FileInputStream(path);
         OPCPackage opcPackage = OPCPackage.open(is);
         XSSFWorkbook workbook = XSSFWorkbookFactory.createWorkbook(opcPackage);
         XSSFSheet sheet = workbook.getSheetAt(0);
 
-        fileProcessorService.validateExcelFile(sheet);
+        fileProcessorService.validateExcelFile(sheet,requestDto);
 
         opcPackage.close();
         workbook.close();
