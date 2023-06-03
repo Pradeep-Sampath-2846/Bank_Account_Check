@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
 public class FileProcessorService {
     @Autowired
     private InterestDateService interestDateService;
+    @Autowired
+    private BankStatementService bankStatementService;
 
-    public void validateExcelFile(XSSFSheet sheet, RequestDto dto){
+    public String validateExcelFile(XSSFSheet sheet, RequestDto dto) throws Exception {
 
         List<TransactionDto> recordList = getRecordList(sheet);
         List<LocalDate> dateList = recordList.stream().map(TransactionDto::getOriginalDate).collect(Collectors.toList());
@@ -31,8 +33,9 @@ public class FileProcessorService {
                 transactionDto.setInterestDate(interestDateService.getInterestDate(dto.getBody().getInterestDetail(),dateList.get(i)));
             }
         }
+         return bankStatementService.generateBankStatementPDF(dto.getHeaders().getBankName(),dto.getHeaders().getAccountHolder(),
+                dto.getHeaders().getBranch(),recordList,"/home/pradeep/Documents/Personal Projects/checkmyaccount/src/main/resources/outputs");
 
-        recordList.forEach(System.out::println);
 
 
 

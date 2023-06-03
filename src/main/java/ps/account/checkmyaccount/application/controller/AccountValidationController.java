@@ -16,19 +16,24 @@ import java.io.IOException;
 public class AccountValidationController {
     @Autowired
     private FileProcessorService fileProcessorService;
-    @PostMapping("/xsxl")
-    public void checkAccount(@RequestBody RequestDto requestDto) throws IOException, InvalidFormatException {
+    @GetMapping("/xsxl")
+    public String checkAccount(@RequestBody RequestDto requestDto) throws IOException, InvalidFormatException {
         String path = "/home/pradeep/Documents/Personal Projects/checkmyaccount/src/main/resources/input/testFile.xlsx";
         FileInputStream is = new FileInputStream(path);
         OPCPackage opcPackage = OPCPackage.open(is);
         XSSFWorkbook workbook = XSSFWorkbookFactory.createWorkbook(opcPackage);
         XSSFSheet sheet = workbook.getSheetAt(0);
-
-        fileProcessorService.validateExcelFile(sheet,requestDto);
+        String content;
+        try {
+           content = fileProcessorService.validateExcelFile(sheet,requestDto);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         opcPackage.close();
         workbook.close();
         is.close();
+        return content;
 
 
     }
